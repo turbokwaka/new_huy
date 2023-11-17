@@ -54,7 +54,7 @@ model Tag {
 }
 
 model AllPosts {
-// many to many explicit
+  // many to many explicit
   userId Int
   postId Int
 
