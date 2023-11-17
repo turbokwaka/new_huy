@@ -15,22 +15,51 @@ enum Role {
   ADMIN
 }
 
+enum tagsType {
+  hardcore
+  doublePenetratrion
+  stepFantasy
+}
+
 model User {
-  id        Int       @id @default(autoincrement())
-  createdAt DateTime  @default(now())
-  username  String    @unique
-  email     String    @unique
-  Profile   Profile[]
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now())
+  username  String     @unique
+  email     String     @unique
+  profile   Profile?
   role      Role
+  authorOf  Post[] // one to many
+  AllPosts  AllPosts[]
 }
 
 model Profile {
-  user            User    @relation(fields: [profileId], references: [id])
+  user            User    @relation(fields: [profileId], references: [id]) // one to one
   profileId       Int     @unique
   displayUsername String?
 }
 
 model Post {
-  postId    Int      @id @default(autoincrement())
-  createdAt DateTime @default(now())
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now())
+  authors   User       @relation(fields: [authorId], references: [id])
+  authorId  Int
+  tags      Tag[] // many to many
+  AllPosts  AllPosts[]
+}
+
+model Tag {
+  type  tagsType
+  tagId Int      @id
+  post  Post[] // many to many
+}
+
+model AllPosts {
+// many to many explicit
+  userId Int
+  postId Int
+
+  user User @relation(fields: [userId], references: [id])
+  post Post @relation(fields: [postId], references: [id])
+
+  @@id([userId, postId])
 }
