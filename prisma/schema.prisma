@@ -10,15 +10,27 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Role {
+  USER
+  ADMIN
+}
+
 model User {
   id        Int       @id @default(autoincrement())
   createdAt DateTime  @default(now())
   username  String    @unique
   email     String    @unique
   Profile   Profile[]
+  role      Role
 }
 
 model Profile {
-  user      User @relation(fields: [profileId], references: [id])
-  profileId Int  @unique
+  user            User    @relation(fields: [profileId], references: [id])
+  profileId       Int     @unique
+  displayUsername String?
+}
+
+model Post {
+  postId    Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
 }
